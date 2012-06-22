@@ -7,7 +7,6 @@ import (
 
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/url"
 )
 
@@ -83,13 +82,10 @@ func fetch(url string) (add *Address, error error) {
 	}
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, BodyReadError
-	}
 
 	var g Response
-	err = json.Unmarshal(body, &g)
+	err = json.NewDecoder(resp.Body).Decode(&g)
+
 	if err != nil {
 		return nil, err
 	}
