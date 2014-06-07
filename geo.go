@@ -79,7 +79,7 @@ func ReverseGeocode(ll string) (*Address, error) {
 	return fetch("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng=" + url.QueryEscape(strings.TrimSpace(ll)))
 }
 
-func fetch(url string) (add *Address, error error) {
+func fetch(url string) (*Address, error) {
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -88,25 +88,22 @@ func fetch(url string) (add *Address, error error) {
 
 	defer resp.Body.Close()
 
-	var g Response
-	err = json.NewDecoder(resp.Body).Decode(&g)
+	var g = new(Response)
+	err = json.NewDecoder(resp.Body).Decode(g)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if g.Status != StatusOk {
-		return nil, errors.New(fmt.Sprintf("Geocoder service error!  (%s)", g.Status))
+		return nil, fmt.Errorf("Geocoder service error!  (%s)", g.Status)
 	}
-
-	// fmt.Printf("%#v", g)
-	// return nil, nil
 
 	return &Address{
 		Lat:      g.Results[0].Geometry.Location.Lat,
 		Lng:      g.Results[0].Geometry.Location.Lng,
 		Address:  g.Results[0].FormattedAddress,
-		Response: &g,
+		Response: g,
 	}, nil
 
 }
