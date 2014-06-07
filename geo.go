@@ -67,10 +67,10 @@ func (a *Address) String() string {
 }
 
 func Geocode(q string) (*Address, error) {
-	return fetch("http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address="+url.QueryEscape(strings.TrimSpace(q)))
+	return fetch("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address="+url.QueryEscape(strings.TrimSpace(q)))
 }
 func ReverseGeocode(ll string) (*Address, error) {
-	return fetch("http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng="+url.QueryEscape(strings.TrimSpace(ll)))
+	return fetch("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng="+url.QueryEscape(strings.TrimSpace(ll)))
 }
 
 
