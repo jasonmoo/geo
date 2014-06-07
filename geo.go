@@ -23,56 +23,57 @@ var (
 	BodyReadError     = errors.New("Unable to read the response body.")
 )
 
-type Address struct {
-	Lat, Lng float64
-	Address  string
-	Response *Response
-}
-
-type Response struct {
-	Status  string
-	Results []Result
-}
-
-type Result struct {
-	Types              []string
-	Formatted_address  string
-	Address_components []AddressComponent
-	Geometry           GeometryData
-}
-
-type AddressComponent struct {
-	Long_name  string
-	Short_name string
-	Types      []string
-}
-
-type GeometryData struct {
-	Location      LatLng
-	Location_type string
-	Viewport      struct {
-		Southwest, Northeast LatLng
+type (
+	Address struct {
+		Lat, Lng float64
+		Address  string
+		Response *Response
 	}
-	Bounds struct {
-		Southwest, Northeast LatLng
-	}
-}
 
-type LatLng struct {
-	Lat, Lng float64
-}
+	Response struct {
+		Status  string
+		Results []Result
+	}
+
+	Result struct {
+		Types              []string
+		Formatted_address  string
+		Address_components []AddressComponent
+		Geometry           GeometryData
+	}
+
+	AddressComponent struct {
+		Long_name  string
+		Short_name string
+		Types      []string
+	}
+
+	GeometryData struct {
+		Location      LatLng
+		Location_type string
+		Viewport      struct {
+			Southwest, Northeast LatLng
+		}
+		Bounds struct {
+			Southwest, Northeast LatLng
+		}
+	}
+
+	LatLng struct {
+		Lat, Lng float64
+	}
+)
 
 func (a *Address) String() string {
 	return fmt.Sprintf("%s (lat: %3.7f, lng: %3.7f)", a.Address, a.Lat, a.Lng)
 }
 
 func Geocode(q string) (*Address, error) {
-	return fetch("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address="+url.QueryEscape(strings.TrimSpace(q)))
+	return fetch("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=" + url.QueryEscape(strings.TrimSpace(q)))
 }
 func ReverseGeocode(ll string) (*Address, error) {
-	return fetch("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng="+url.QueryEscape(strings.TrimSpace(ll)))
+	return fetch("https://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng=" + url.QueryEscape(strings.TrimSpace(ll)))
 }
-
 
 func fetch(url string) (add *Address, error error) {
 
@@ -98,9 +99,10 @@ func fetch(url string) (add *Address, error error) {
 	// return nil, nil
 
 	return &Address{
-		g.Results[0].Geometry.Location.Lat,
-		g.Results[0].Geometry.Location.Lng,
-		g.Results[0].Formatted_address,
-		&g}, nil
+		Lat:      g.Results[0].Geometry.Location.Lat,
+		Lng:      g.Results[0].Geometry.Location.Lng,
+		Address:  g.Results[0].Formatted_address,
+		Response: &g,
+	}, nil
 
 }

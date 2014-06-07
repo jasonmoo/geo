@@ -1,62 +1,54 @@
 package geo
 
 import (
-	"testing"
 	"fmt"
+	"testing"
+)
+
+var (
+	Addresses = []struct {
+		Address  string
+		Lat, Lng float64
+	}{{
+		Address: "323 South Albany Street, Ithaca, NY 14850, USA",
+		Lat:     42.435901,
+		Lng:     -76.501238,
+	}}
 )
 
 func TestGeocode(t *testing.T) {
 
-	add, err := Geocode("555 west 18th street, manhattan, ny")
-	if err != nil {
-		t.Error(err)
+	for _, test_address := range Addresses {
+		// t.Logf("checking %s\n", test_address)
+		addy, err := Geocode(test_address.Address)
+		if err != nil {
+			t.Error(err)
+		}
+		if addy.Address != test_address.Address {
+			t.Errorf("Expected: %s, Got: %s", test_address.Address, addy.Address)
+		}
+		if addy.Lat != test_address.Lat || addy.Lng != test_address.Lng {
+			t.Errorf("Expected: %f:%f, Got: %f:%f", test_address.Lat, test_address.Lng, addy.Lat, addy.Lng)
+		}
 	}
-	if add.Address != "555 W 18th St, New York, NY 10011, USA" {
-		t.Errorf("Incorrect address returned (%v)", add)
-	}
-	if add.Lat != 40.7453721 || add.Lng != -74.0078293 {
-		t.Errorf("Incorrect coords returned (%v)", add)
-	}
-	fmt.Println(add)
-
-	add, err = Geocode("Bartlett, Il")
-	if err != nil {
-		t.Error(err)
-	}
-	if add.Address != "Bartlett, IL, USA" {
-		t.Errorf("Incorrect address returned (%v)", add)
-	}
-	if add.Lat != 41.9950276 || add.Lng != -88.1856301 {
-		t.Errorf("Incorrect coords returned (%v)", add)
-	}
-	fmt.Println(add)
 
 }
 
 func TestReverseGeocode(t *testing.T) {
 
-	add, err := ReverseGeocode("40.7453721,-74.0078293")
-	if err != nil {
-		t.Error(err)
+	for _, test_address := range Addresses {
+		// t.Logf("checking %s\n", test_address)
+		latlng := fmt.Sprintf("%f,%f", test_address.Lat, test_address.Lng)
+		addy, err := ReverseGeocode(latlng)
+		if err != nil {
+			t.Error(err)
+		}
+		if addy.Address != test_address.Address {
+			t.Errorf("Expected: %s, Got: %s", test_address.Address, addy.Address)
+		}
+		if addy.Lat != test_address.Lat || addy.Lng != test_address.Lng {
+			t.Errorf("Expected: %f:%f, Got: %f:%f", test_address.Lat, test_address.Lng, addy.Lat, addy.Lng)
+		}
 	}
-	if add.Address != "555 W 18th St, Manhattan, NY 10011, USA" {
-		t.Errorf("Incorrect address returned (%v)", add)
-	}
-	if add.Lat != 40.7453721 || add.Lng != -74.0078293 {
-		t.Errorf("Incorrect coords returned (%v)", add)
-	}
-	fmt.Println(add)
-
-	add, err = Geocode("41.9950276,-88.1856301")
-	if err != nil {
-		t.Error(err)
-	}
-	if add.Address != "Village Hall, Bartlett, IL 60103, USA" {
-		t.Errorf("Incorrect address returned (%v)", add)
-	}
-	if add.Lat != 41.9950276 || add.Lng != -88.1856301 {
-		t.Errorf("Incorrect coords returned (%v)", add)
-	}
-	fmt.Println(add)
 
 }
