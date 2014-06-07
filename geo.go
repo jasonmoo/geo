@@ -25,42 +25,46 @@ var (
 
 type (
 	Address struct {
-		Lat, Lng float64
-		Address  string
-		Response *Response
+		Lat      float64   `json:"lat"`
+		Lng      float64   `json:"lng"`
+		Address  string    `json:"address"`
+		Response *Response `json:"response"`
 	}
 
 	Response struct {
-		Status  string
-		Results []Result
+		Status  string   `json:"status"`
+		Results []Result `json:"results"`
 	}
 
 	Result struct {
-		Types              []string
-		Formatted_address  string
-		Address_components []AddressComponent
-		Geometry           GeometryData
+		Types             []string           `json:"types"`
+		FormattedAddress  string             `json:"formatted_address"`
+		AddressComponents []AddressComponent `json:"address_components"`
+		Geometry          GeometryData       `json:"geometry"`
 	}
 
 	AddressComponent struct {
-		Long_name  string
-		Short_name string
-		Types      []string
+		LongName  string   `json:"long_name"`
+		ShortName string   `json:"short_name"`
+		Types     []string `json:"types"`
 	}
 
 	GeometryData struct {
-		Location      LatLng
-		Location_type string
-		Viewport      struct {
-			Southwest, Northeast LatLng
-		}
+		Location     LatLng `json:"location"`
+		LocationType string `json:"location_type"`
+		Viewport     struct {
+			Southwest LatLng `json:"southwest"`
+			Northeast LatLng `json:"northeast"`
+		} `json:"viewport"`
 		Bounds struct {
-			Southwest, Northeast LatLng
-		}
+			Southwest LatLng `json:"southwest"`
+			Northeast LatLng `json:"northeast"`
+		} `json:"bounds"`
 	}
 
 	LatLng struct {
-		Lat, Lng float64
+		Lat float64 `json:"lat"`
+		Lng float64 `json:"lng"`
 	}
 )
 
@@ -101,7 +105,7 @@ func fetch(url string) (add *Address, error error) {
 	return &Address{
 		Lat:      g.Results[0].Geometry.Location.Lat,
 		Lng:      g.Results[0].Geometry.Location.Lng,
-		Address:  g.Results[0].Formatted_address,
+		Address:  g.Results[0].FormattedAddress,
 		Response: &g,
 	}, nil
 
