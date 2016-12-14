@@ -10,7 +10,7 @@ var (
 		Address  string
 		Lat, Lng float64
 	}{{
-		Address: "323 South Albany Street, Ithaca, NY 14850, USA",
+		Address: "323 S Albany St, Ithaca, NY 14850, USA",
 		Lat:     42.435901,
 		Lng:     -76.501238,
 	}}
